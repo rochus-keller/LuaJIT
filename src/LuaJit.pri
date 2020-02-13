@@ -1,3 +1,5 @@
+INCLUDEPATH += ../LuaJIT/src
+
 HEADERS += \
     $$PWD/lauxlib.h \
     $$PWD/lj_alloc.h \

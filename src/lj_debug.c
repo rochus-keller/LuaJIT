@@ -351,8 +351,9 @@ void lj_debug_shortname(char *out, GCstr *str)
     strcpy(out, "[string \""); out += 9;
     if (src[len] != '\0') {  /* Must truncate? */
       if (len > LUA_IDSIZE-15) len = LUA_IDSIZE-15;
-      strncpy(out, src, len); out += len;
-      strcpy(out, "..."); out += 3;
+      strcpy(out, "..."); out += 3; /* RK: instead of path... we are interested in ...path */
+      int len2 = strlen(src);
+      strncpy(out, src + len2 - len, len); out += len;
     } else {
       strcpy(out, src); out += len;
     }
@@ -368,7 +369,7 @@ void lj_debug_addloc(lua_State *L, const char *msg,
     GCfunc *fn = frame_func(frame);
     if (isluafunc(fn)) {
       BCLine line = debug_frameline(L, fn, nextframe);
-      if (line >= 0) {
+      if (line != 0) { /* RK: allow for MSB set */
 	char buf[LUA_IDSIZE];
 	lj_debug_shortname(buf, proto_chunkname(funcproto(fn)));
 	lj_str_pushf(L, "%s:%d: %s", buf, line, msg);
