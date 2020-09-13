@@ -478,7 +478,14 @@ int lj_debug_getinfo(lua_State *L, const char *what, lj_Debug *ar, int ext)
 	ar->what = "C";
       }
     } else if (*what == 'l') {
-      ar->currentline = frame ? debug_frameline(L, fn, nextframe) : -1;
+        ar->currentline = frame ? debug_frameline(L, fn, nextframe) : -1;
+    } else if (*what == 'p') {
+        /* RK get current bytecode position */
+        BCPos pc = debug_framepc(L, fn, nextframe);
+        if (pc != NO_BCPOS)
+            ar->currentline = pc;
+        else
+            ar->currentline = -1;
     } else if (*what == 'u') {
       ar->nups = fn->c.nupvalues;
       if (ext) {
