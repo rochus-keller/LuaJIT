@@ -2345,7 +2345,7 @@ static void parse_return(LexState *ls)
     ExpDesc e;  /* Receives the _last_ expression in the list. */
     BCReg nret = expr_list(ls, &e);
     if (nret == 1) {  /* Return one result. */
-#ifndef _LJTOOLS_DONT_CREATE_TAIL_CALLS /* RK: this hack avoids that CALLT is generated; all CALL instead */
+#ifdef _LJTOOLS_HAVE_TAIL_CALLS /* RK: this hack avoids that CALLT is generated; all CALL instead */
       if (e.k == VCALL) {  /* Check for tail call. */
 	BCIns *ip = bcptr(fs, &e);
 	/* It doesn't pay off to add BC_VARGT just for 'return ...'. */
